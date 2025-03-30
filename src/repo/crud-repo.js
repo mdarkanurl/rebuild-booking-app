@@ -19,7 +19,11 @@ class CrudRepo {
                 id: data
             }
         });
-        return response;
+
+        if(!response) {
+            throw new AppError('Not able to found the resource', StatusCodes.NOT_FOUND);
+        }
+        return `You've successfully delete ${response} data`;
     }
 
     async get(data) {
@@ -38,13 +42,18 @@ class CrudRepo {
         return response;
     }
 
-    async update(id, data) {
-        const response = await this.model.update(data, {
+    async update(data, id) {
+        const [affectedRows] = await this.model.update(data, {
             where: {
                 id: id
             }
         });
-        return response;
+
+        if(affectedRows === 0) {
+            throw new AppError('Not able to found the resource', StatusCodes.NOT_FOUND);
+        }
+
+        return `You successfully updated and here's the affected rows ${affectedRows}`;
     }
 }
 

@@ -36,14 +36,40 @@ const getAirplane = async (id) => {
         return airplane;
     } catch (error) {
         if(error.statusCode === StatusCodes.NOT_FOUND) {
-            throw new AppError('The airplane you requested is not present', error.StatusCode);
+            throw new AppError('The airplane you requested is not present', error.statusCode);
         }
         throw new AppError('Can\'t fetch data of the airplane', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
+const destroyAirplane = async (id) => {
+    try {
+        const response = await airplaneRepo.destroy(id);
+        return response;
+    } catch (error) {
+        if(error.statusCode === StatusCodes.NOT_FOUND) {
+            throw new AppError('The airplane you requested to delete is not present', error.statusCode);
+        }
+        throw new AppError('Can\'t delete the airplane', StatusCodes.INTERNAL_SERVER_ERROR);
+    }
+}
+
+const updateAirplane = async (data, id) => {
+    try {
+        const response = await airplaneRepo.update({ capacity: data }, id);
+        return response;
+    } catch (error) {
+        if(error.statusCode === StatusCodes.NOT_FOUND) {
+            throw new AppError('The airplane you requested to update is not present', error.statusCode);
+        }
+        throw new AppError('Can\'t update the airplane', StatusCodes.INTERNAL_SERVER_ERROR);
     }
 }
 
 module.exports = {
     createAirplane,
     getAirplanes,
-    getAirplane
+    getAirplane,
+    destroyAirplane,
+    updateAirplane
 }

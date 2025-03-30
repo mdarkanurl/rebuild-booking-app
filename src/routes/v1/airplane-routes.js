@@ -14,4 +14,10 @@ router.get('/',
 router.get('/:id',
        AriplaneController.getAirplane);
 
+router.delete('/:id',
+       AriplaneController.destroyAirplane);
+
+router.put('/:id',
+       AriplaneController.updateAirplane);
+
 module.exports = router
