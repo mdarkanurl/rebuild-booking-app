@@ -1,5 +1,7 @@
 const { AirplaneService } = require('../services');
-const { StatusCodes } = require('http-status-codes');
+const { SuccessResponse, ErrorResponse } = require('../utils/common');
+
+const { StatusCodes, REQUEST_URI_TOO_LONG } = require('http-status-codes');
 
 const createAirplane = async (req, res) => {
     try {
@@ -7,26 +9,59 @@ const createAirplane = async (req, res) => {
             modelNumber: req.body.modelNumber,
             capacity: req.body.capacity
         });
+
+        SuccessResponse.data = airplane;
+        SuccessResponse.message = 'Successfully create an airplane';
+
         return res
                 .status(StatusCodes.CREATED)
-                .json({
-                    success: true,
-                    message: 'Successfully create an airplane',
-                    data: airplane,
-                    error: {}
-                });
+                .json(SuccessResponse);
     } catch (error) {
+        ErrorResponse.message = 'Something went wrong while creating airplane';
+        ErrorResponse.error = error;
+        
         return res
-                .status(StatusCodes.INTERNAL_SERVER_ERROR)
-                .json({
-                    success: false,
-                    message: 'Something went wrong while creating airplane',
-                    data: {},
-                    error: error.message
-                });
+                .status(error.statusCode)
+                .json(ErrorResponse);
+    }
+}
+
+const getAirplanes = async (req, res) => {
+    try {
+        const airplanes = await AirplaneService.getAirplanes();
+        SuccessResponse.data = airplanes;
+
+        return res
+                .status(StatusCodes.OK)
+                .json(SuccessResponse);
+    } catch (error) {
+        ErrorResponse.error = error;
+        
+        return res
+                .status(error.statusCode)
+                .json(ErrorResponse);
+    }
+}
+
+const getAirplane = async (req, res) => {
+    try {
+        const airplanes = await AirplaneService.getAirplane(req.params.id);
+        SuccessResponse.data = airplanes;
+
+        return res
+                .status(StatusCodes.OK)
+                .json(SuccessResponse);
+    } catch (error) {
+        ErrorResponse.error = error;
+        
+        return res
+                .status(error.statusCode || StatusCodes.NOT_FOUND)
+                .json(ErrorResponse);
     }
 }
 
 module.exports = {
-    createAirplane
+    createAirplane,
+    getAirplanes,
+    getAirplane
 }
