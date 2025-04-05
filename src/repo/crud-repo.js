@@ -37,8 +37,8 @@ class CrudRepo {
         return response;
     }
 
-    async getAll(data) {
-        const response = await this.model.findAll(data);
+    async getAll() {
+        const response = await this.model.findAll();
         return response;
     }
 
