@@ -66,7 +66,7 @@ const getAllFlights = async (query) => {
         const params = query.sort.split(',');
         const sortFilters = params.map((params) => params.split('_'));
 
-        sortFilter = [sortFilters]
+        sortFilter = sortFilters
     }
 
     try {
