@@ -52,13 +52,13 @@ class FlightRepo extends CrudRepo {
 
     async updateRemainingSeats(flightId, seats, dec = true) {
         await db.sequelize.query(addRowLockOnFlight(flightId)); // Update status via raw query
-        // const flight = await Flight.findByPk(flightId);
-        // if(parseInt(dec)) {
-        //     await flight.decrement('totalSeats', { by: seats });
-        // } else {
-        //     await flight.increment('totalSeats', { by: seats });
-        // }
-        // return flight;
+        const flight = await Flight.findByPk(flightId);
+        if(parseInt(dec)) {
+            await flight.decrement('totalSeats', { by: seats });
+        } else {
+            await flight.increment('totalSeats', { by: seats });
+        }
+        return flight;
     }
 }
 
